@@ -3,6 +3,9 @@ package org.apache.jsp;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.jsp.*;
+import models.Cart;
+import java.util.ArrayList;
+import java.util.ArrayList;
 
 public final class contact_jsp extends org.apache.jasper.runtime.HttpJspBase
     implements org.apache.jasper.runtime.JspSourceDependent {
@@ -44,13 +47,23 @@ public final class contact_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\n");
       out.write("\n");
       out.write("\n");
+      out.write("\n");
+      out.write("\n");
+      out.write("\n");
       out.write("<!DOCTYPE html>\n");
       out.write("<html>\n");
       out.write("    <head>\n");
-      out.write("    <title>LapTopGaming</title>\n");
+      out.write("        <title>LapTopGaming</title>\n");
       out.write("        <meta charset=\"UTF-8\">\n");
       out.write("        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");
-      out.write("\n");
+      out.write("        <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css\">       \n");
+      out.write("        <link href=\"https://use.fontawesome.com/releases/v5.0.4/css/all.css\" rel=\"stylesheet\">    \n");
+      out.write("        <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css\" />\n");
+      out.write("        <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\">\n");
+      out.write("        </script>\n");
+      out.write("        <script src=\"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js\">\n");
+      out.write("        </script>\n");
+      out.write("        <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js\"></script>\n");
       out.write("        <style>\n");
       out.write("            body {\n");
       out.write("                margin-top: 20px;padding: 0;\n");
@@ -168,6 +181,12 @@ public final class contact_jsp extends org.apache.jasper.runtime.HttpJspBase
             HttpSession s = request.getSession(true);
             String us = (String) s.getAttribute("username");
             String admin = (String) s.getAttribute("admin");
+            
+            ArrayList<Cart> cart_list = (ArrayList<Cart>) session.getAttribute("cart_list");
+
+            if (cart_list != null) {
+                request.setAttribute("cart_list", cart_list);
+            }
         
       out.write("\n");
       out.write("    </head>\n");
@@ -180,7 +199,7 @@ public final class contact_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                    <span style=\"\"><a href=\"home\" style=\"text-decoration: none;color:#DAA520\">LapTop</a> </span><span style=\"\"><a href=\"home\" style=\"text-decoration: none;color:#000000\">Gaming</a></span>\n");
       out.write("                </h1>\n");
       out.write("                <p style=\"float:left;margin-top: 70px;font-weight: 900px;margin-left: 5px;word-spacing: 2px;color:black;font-size:15px;\">\n");
-      out.write("                   LapTopGaming Store\n");
+      out.write("                    LapTopGaming Store\n");
       out.write("                </p>\n");
       out.write("            </div>\n");
       out.write("        </div>\n");
@@ -196,6 +215,10 @@ public final class contact_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\n");
       out.write("                <li ><a  href=\"about\" >About</a></li>\n");
       out.write("                <li ><a  href=\"shop\" style=\"color:green;\">Shop</a></li>\n");
+      out.write("                <li ><a  href=\"userinfo\">Account</a></li>\n");
+      out.write("                <li ><a  href=\"mycart\">Cart<span class=\"badge badge-danger\">");
+      out.write((java.lang.String) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${cart_list.size()}", java.lang.String.class, (PageContext)_jspx_page_context, null));
+      out.write("</span></a></li>\n");
       out.write("\n");
       out.write("                ");
  if (admin != null) {
@@ -274,9 +297,9 @@ public final class contact_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("        <!-- start Footer-->\n");
       out.write("        <div id=\"footer\" style=\"height: 250px; margin: 0 auto;padding: 0 20px;\n");
       out.write("             background-color: #D3D3D3; border: none solid #8C0209;\">\n");
-      out.write("       <p style=\"float:left; margin:70px; font-size:60px;\"> <span style=\"color:#DAA520\">LapTop</span><span style=\"color:#000000\">Gaming</span>\n");
-      out.write("                </p>\n");
-      out.write("                  <p style=\"float:left;margin-top:170px;margin-left:-350px;\">\n");
+      out.write("            <p style=\"float:left; margin:70px; font-size:60px;\"> <span style=\"color:#DAA520\">LapTop</span><span style=\"color:#000000\">Gaming</span>\n");
+      out.write("            </p>\n");
+      out.write("            <p style=\"float:left;margin-top:170px;margin-left:-350px;\">\n");
       out.write("                <a href=\"https://www.instagram.com/clongcena11/\"><img src=\"src/ins.png\" style=\"width:65px; height:65px;\"></img>\n");
       out.write("                    <a href=\"https://www.facebook.com/long.chu.71653\"><img src=\"src/fb.png\" style=\"width:65px; height:65px;\"></img>\n");
       out.write("\n");
@@ -288,7 +311,7 @@ public final class contact_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                            <span style=\"color:#556B2F;\">LapTopGaming not only brings customers the latest and highest quality genuine products, but <br/>\n");
       out.write("                                also a place for customers to experience products comfortably under the advice of trained staff and technicians. repertoires. . The difference of LapTopGaming is also separate after-sales policies such as Gold Warranty: \n");
       out.write("                                <br />  Warranty for both drops, water damage, 1-for-1 policy within 30 days <br/> \n");
-      out.write("                             \n");
+      out.write("\n");
       out.write("                            </span>\n");
       out.write("                            </div>\n");
       out.write("                            <!-- end page -->\n");

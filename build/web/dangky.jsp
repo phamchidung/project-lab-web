@@ -164,6 +164,7 @@
                 <% if (us != null) {%>
                 <li ><a  href="about" >About</a></li>
                 <li ><a  href="shop" style="color:green;">Shop</a></li>
+                <li ><a  href="userinfo">Account</a></li>
 
                 <% if (admin != null) {%>
                 <li ><a  href="manager">Manager account</a></li>

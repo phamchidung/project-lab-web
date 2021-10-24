@@ -212,6 +212,15 @@ public final class shop_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                list-style: none;\n");
       out.write("                display: inline-block;\n");
       out.write("            }\n");
+      out.write("\n");
+      out.write("            .btnSubmit {\n");
+      out.write("                background-color: #FFE4C4;\n");
+      out.write("                border-radius: 5px;\n");
+      out.write("            }\n");
+      out.write("            .search-name {\n");
+      out.write("                color: red;\n");
+      out.write("                font-size: 20px;\n");
+      out.write("            }\n");
       out.write("        </style>\n");
       out.write("\n");
       out.write("        ");
@@ -249,6 +258,7 @@ public final class shop_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\n");
       out.write("                <li ><a  href=\"about\" >About</a></li>\n");
       out.write("                <li ><a  href=\"shop\" style=\"color:green;\">Shop</a></li>\n");
+      out.write("                <li ><a  href=\"userinfo\">Account</a></li>\n");
       out.write("\n");
       out.write("                ");
  if (admin != null) {
@@ -282,6 +292,28 @@ public final class shop_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("        <section id=\"mainContainer\">\n");
       out.write("            <div class=\"about\" >\n");
       out.write("                <h2 style=\"font-size:45px;font-family:Time New Roman\">SẢN PHẨM MÁY TÍNH XÁCH TAY CHÍNH HÃNG</h2>\n");
+      out.write("\n");
+      out.write("                <!-- Search -->\n");
+      out.write("                <p class=\"search-name\">Tìm kiếm sản phẩm</p>\n");
+      out.write("\n");
+      out.write("                <div class=\"search\">\n");
+      out.write("                    <form action=\"shop\">\n");
+      out.write("                        <input class=\"nameProduct\" required type=\"text\" minlength=\"0\" maxlength=\"10\" placeholder=\"Tên sản phẩm...\" value=\"");
+      out.write((java.lang.String) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${nameProduct}", java.lang.String.class, (PageContext)_jspx_page_context, null));
+      out.write("\" name=\"nameProduct\"/>\n");
+      out.write("                        <button type=\"submit\" class=\"btnSubmit\">Tìm kiếm</button>\n");
+      out.write("                    </form>\n");
+      out.write("                </div>\n");
+      out.write("\n");
+      out.write("                ");
+ if (list.size() == 0) {
+                
+      out.write("\n");
+      out.write("                <h2>Không tìm thấy sản phẩm</h2>\n");
+      out.write("                ");
+
+                    }
+      out.write("\n");
       out.write("                <div class=\"products\">\n");
       out.write("                    ");
  for (Product p : list) {
