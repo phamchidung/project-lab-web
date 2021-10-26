@@ -20,6 +20,7 @@ import models.Cart;
 import models.Feedback;
 import models.LaptopInfo;
 import models.Order;
+import models.Post;
 import models.Product;
 import models.Users;
 
@@ -48,7 +49,12 @@ public class DAO {
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new Users(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4));
+                return new Users(rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getInt(5),
+                        rs.getString(6));
             }
         } catch (SQLException e) {
             System.out.println(e);
@@ -67,20 +73,21 @@ public class DAO {
         }
     }
 
-    public void signUpAccount(String username, String password, String email, String phone) {
+    public void signUpAccount(String username,
+            String password,
+            String email,
+            String phone,
+            int gender,
+            String address) {
         try {
-            String sql = "INSERT INTO [PRJ321E5_PROJECT].[dbo].[User]\n"
-                    + "           ([username]\n"
-                    + "           ,[password]\n"
-                    + "           ,[email]\n"
-                    + "           ,[phone])\n"
-                    + "     VALUES\n"
-                    + "           (?,?,?,?)";
+            String sql = "insert into [PRJ321E5_PROJECT].[dbo].[User] values(?,?,?,?,?,?)";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, username);
             ps.setString(2, password);
             ps.setString(3, email);
             ps.setString(4, phone);
+            ps.setInt(5, gender);
+            ps.setString(6, address);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
@@ -94,6 +101,8 @@ public class DAO {
                     + "      ,[password] = ?\n"
                     + "      ,[email] = ?\n"
                     + "      ,[phone] = ?\n"
+                    + "      ,[gender] = ?\n"
+                    + "      ,[address] = ?\n"
                     + " WHERE [username] = ?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -101,32 +110,48 @@ public class DAO {
             statement.setString(2, us.getPassword());
             statement.setString(3, us.getEmail());
             statement.setString(4, us.getPhone());
-            statement.setString(5, oldusername);
+            statement.setInt(5, us.getGender());
+            statement.setString(6, us.getAddress());
+            statement.setString(7, oldusername);
             statement.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void updateInfoUser(Users user) {
+    public void changePassword(String username, String newPassword) {
         try {
             String sql = "UPDATE [PRJ321E5_PROJECT].[dbo].[User]\n"
                     + "   SET [password] = ?\n"
-                    + "      ,[email] = ?\n"
-                    + "      ,[phone] = ?\n"
                     + " WHERE [username] = ?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, user.getPassword());
-            statement.setString(2, user.getEmail());
-            statement.setString(3, user.getPhone());
-            statement.setString(4, user.getUsername());
+            statement.setString(1, newPassword);
+            statement.setString(2, username);
             statement.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+//    public void updateInfoUser(Users user) {
+//        try {
+//            String sql = "UPDATE [PRJ321E5_PROJECT].[dbo].[User]\n"
+//                    + "   SET [password] = ?\n"
+//                    + "      ,[email] = ?\n"
+//                    + "      ,[phone] = ?\n"
+//                    + " WHERE [username] = ?";
+//
+//            PreparedStatement statement = connection.prepareStatement(sql);
+//            statement.setString(1, user.getPassword());
+//            statement.setString(2, user.getEmail());
+//            statement.setString(3, user.getPhone());
+//            statement.setString(4, user.getUsername());
+//            statement.executeUpdate();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     public void addFeedback(Feedback feedback) {
         java.util.Date utilDate = new java.util.Date();
         Date now = new Date(utilDate.getTime());
@@ -137,6 +162,22 @@ public class DAO {
             ps.setString(1, feedback.getUsername());
             ps.setString(2, feedback.getMessage());
             ps.setDate(3, now);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public void addPost(Post post) {
+        Date now = new Date(post.getPublicAt().getTime());
+
+        try {
+            String sql = "insert into Post values(?,?,?,?)";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, post.getTitle());
+            ps.setString(2, post.getImage());
+            ps.setString(3, post.getContent());
+            ps.setDate(4, now);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
@@ -198,6 +239,47 @@ public class DAO {
                 laptopInfo.setOrigin(rs.getString("Origin"));
                 laptopInfo.setDebutYear(rs.getInt("DebutYear"));
                 return laptopInfo;
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public Feedback getFeedbackById(int id) {
+        try {
+            String sql = "select * from Feedback where ID = ? ";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback f = new Feedback(
+                        rs.getInt("ID"),
+                        rs.getString("username"),
+                        rs.getString("message"),
+                        rs.getDate("createAt")
+                );
+
+                return f;
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public Users getUserByUsername(String username) {
+        try {
+            String sql = "select * from [User] where username = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Users u = new Users();
+                u.setUsername(rs.getString("username"));
+                u.setEmail(rs.getString("email"));
+                u.setPhone(rs.getString("phone"));
+                u.setGender(rs.getInt("gender"));
+                u.setAddress(rs.getString("address"));
+                return u;
             }
         } catch (Exception e) {
         }
@@ -301,6 +383,79 @@ public class DAO {
         return list;
     }
 
+    public Post getPostById(int id) {
+        try {
+            String query = "select * from Post where ID = ?";
+
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Post p = new Post(
+                        rs.getInt("ID"),
+                        rs.getString("Title"),
+                        rs.getString("Image"),
+                        rs.getString("Content"),
+                        rs.getDate("publicAt"));
+                return p;
+            }
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+        }
+        return null;
+    }
+
+    public int countPost(String title) {
+        int count = 0;
+        try {
+            String query = "select count(*) from Post where Title like ?";
+
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, "%" + title + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+        }
+        return count;
+
+    }
+
+    public List<Post> getPosts(int pageIndex, String title) {
+        List<Post> list = new ArrayList<>();
+        try {
+            String query = "select * from("
+                    + "select ROW_NUMBER() over (order by publicAt desc) as rn, *\n"
+                    + "from Post where Title like ?"
+                    + ")as x\n"
+                    + "where rn between (?-1)*?+1"
+                    + "and ?*?";
+
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, "%" + title + "%");
+            ps.setInt(2, pageIndex);
+            ps.setInt(3, 6);
+            ps.setInt(4, pageIndex);
+            ps.setInt(5, 6);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Post p = new Post(
+                        rs.getInt("ID"),
+                        rs.getString("Title"),
+                        rs.getString("Image"),
+                        rs.getString("Content"),
+                        rs.getDate("publicAt")
+                );
+                list.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public List<Product> getAllProduct() {
         List<Product> list = new ArrayList<>();
         try {
@@ -352,6 +507,17 @@ public class DAO {
         }
     }
 
+    public void deletePostById(int id) {
+        try {
+            String sql = "DELETE FROM [dbo].[Post] WHERE ID = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
     public int getLastOrderID() {
         int orderID = 0;
         try {
@@ -400,10 +566,10 @@ public class DAO {
                     + "p.ProductPrice,\n"
                     + "o.OrderQuantity,\n"
                     + "o.OrderTotalPrice from Product p, [Order] o \n"
-                    + "where p.ProductID = o.productid and o.username = ?) as x";
+                    + "where p.ProductID = o.productid and o.username like ?) as x";
 
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1, username);
+            ps.setString(1, "%" + username + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 count = rs.getInt(1);
@@ -415,6 +581,31 @@ public class DAO {
 
     }
 
+    public Order getOrderById(int id) {
+        try {
+            String sql = "select [Order].OrderID, Product.ProductName, Product.ProductPrice, [Order].OrderQuantity, [Order].username,[Order].OrderTotalPrice \n"
+                    + "from [Order]\n"
+                    + "join Product \n"
+                    + "on [Order].ProductID = Product.ProductID and [Order].OrderID = ?";
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Order o = new Order(
+                        rs.getInt("OrderID"),
+                        rs.getString("ProductName"),
+                        rs.getInt("ProductPrice"),
+                        rs.getInt("OrderQuantity"),
+                        rs.getInt("OrderTotalPrice"),
+                        rs.getString("username"));
+                return o;
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
     public List<Order> getHistory(int pageIndex, String username) {
 
         List<Order> list = new ArrayList();
@@ -424,12 +615,13 @@ public class DAO {
                     + "p.ProductName,\n"
                     + "p.ProductPrice,\n"
                     + "o.OrderQuantity,\n"
+                    + "o.username,\n"
                     + "o.OrderTotalPrice from Product p, [Order] o \n"
-                    + "where p.ProductID = o.productid and o.username = ?) as history )as x "
+                    + "where p.ProductID = o.productid and o.username like ?) as history )as x "
                     + "where rn between (?-1)*?+1"
                     + "and ?*?";
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, username);
+            ps.setString(1, "%" + username + "%");
             ps.setInt(2, pageIndex);
             ps.setInt(3, 6);
             ps.setInt(4, pageIndex);
@@ -441,7 +633,8 @@ public class DAO {
                         rs.getString("ProductName"),
                         rs.getInt("ProductPrice"),
                         rs.getInt("OrderQuantity"),
-                        rs.getInt("OrderTotalPrice"));
+                        rs.getInt("OrderTotalPrice"),
+                        rs.getString("username"));
                 list.add(o);
             }
         } catch (Exception e) {
@@ -495,6 +688,8 @@ public class DAO {
                 u.setUsername(rs.getString("username"));
                 u.setEmail(rs.getString("email"));
                 u.setPhone(rs.getString("phone"));
+                u.setGender(rs.getInt("gender"));
+                u.setAddress(rs.getString("address"));
                 list.add(u);
             }
         } catch (Exception e) {
@@ -637,6 +832,8 @@ public class DAO {
                 u.setUsername(rs.getString("username"));
                 u.setEmail(rs.getString("email"));
                 u.setPhone(rs.getString("phone"));
+                u.setGender(rs.getInt("gender"));
+                u.setAddress(rs.getString("address"));
                 list.add(u);
             }
         } catch (Exception e) {

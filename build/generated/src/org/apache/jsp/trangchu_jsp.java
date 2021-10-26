@@ -178,16 +178,19 @@ public final class trangchu_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                ");
  if (admin != null) {
       out.write("\n");
+      out.write("                <li ><a  href=\"ListPostServlet\">Manager Post</a></li>\n");
+      out.write("                <li ><a  href=\"OrderList\">Manager Order</a></li>\n");
       out.write("                <li ><a  href=\"manager\">Manager account</a></li>\n");
       out.write("                <li ><a  href=\"manageritem\">Manager Product</a></li>\n");
       out.write("                <li ><a  href=\"FeedbackListServlet\">Manager Feedback</a></li>\n");
       out.write("                    ");
 } else {
       out.write("\n");
-      out.write("                <li ><a  href=\"shop\">Shop</a></li>\n");
+      out.write("                <li ><a  href=\"ListPostServlet\">Post</a></li>\n");
       out.write("                <li ><a  href=\"mycart\">Cart<span class=\"badge badge-danger\">");
       out.write((java.lang.String) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${cart_list.size()}", java.lang.String.class, (PageContext)_jspx_page_context, null));
       out.write("</span></a></li>\n");
+      out.write("                <li ><a  href=\"shop\">Shop</a></li>\n");
       out.write("                <li ><a  href=\"myorder\">My Order</a></li>");
 }
       out.write("\n");

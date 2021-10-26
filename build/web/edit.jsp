@@ -85,7 +85,7 @@
             #mainContainer {
                 width: 1200px;
                 height: 100%;
-                margin: 40px auto;
+                margin: 60px auto;
                 padding: 20px 5px;
                 background: #FFFACD;
                 boder:10px solid black;
@@ -182,10 +182,13 @@
                 <li ><a  href="userinfo">Account</a></li>
 
                 <% if (admin != null) {%>
+                <li ><a  href="ListPostServlet">Manager Post</a></li>
+                <li ><a  href="OrderList">Manager Order</a></li>
                 <li ><a  href="manager">Manager account</a></li>
                 <li ><a  href="manageritem">Manager Product</a></li>
                 <li ><a  href="FeedbackListServlet">Manager Feedback</a></li>
                     <%} else {%>
+                <li ><a  href="ListPostServlet">Post</a></li>
                 <li ><a  href="shop" style="color:green;">Shop</a></li>
                 <li ><a  href="mycart">Cart<span class="badge badge-danger">${cart_list.size()}</span></a></li>
                 <li ><a  href="myorder">My Order</a></li><%}%>
@@ -219,6 +222,13 @@
 
                         <label>Phone</label>
                         <input type="text" value="${users.phone}">
+                        
+                        <label>Gender</label>
+                        <input type="text" value="${users.gender == 1 ? 'Nam' : 'Nữ'}">
+                        
+                        <label>address</label>
+                        <input type="text" value="${users.address}">
+                        
                         <br><br>
                         <h2>Change your information </h2>
                         <label>New Username</label>       
@@ -230,6 +240,14 @@
                         <label>New Phone</label>
                         <input type="text" name="phone" required placeholder="Phone.."/>
 
+                        <label>Gender</label> <br>
+                        <label>Nam</label>
+                        <input type="radio" id="male" name="gender" value="1" required>
+                        <label>Nữ</label>
+                        <input type="radio" id="female" name="gender" value="0"> <br> <br>
+
+                        <label>Address</label>
+                        <input type="text"  name="address" value="${users.address}" required placeholder="Your address..">
 
                         <input type="submit" value="Change & Save">
 

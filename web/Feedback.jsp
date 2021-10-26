@@ -80,7 +80,7 @@
             #mainContainer {
                 width: 1200px;
                 height:100%;
-                margin: 40px auto;
+                margin: 60px auto;
                 padding: 20px 5px;
                 background: #f1f1f1;
                 boder:10px solid black;
@@ -137,10 +137,13 @@
                 <li ><a  href="userinfo">Account</a></li>
 
                 <% if (admin != null) {%>
+                <li ><a  href="ListPostServlet">Manager Post</a></li>
+                <li ><a  href="OrderList">Manager Order</a></li>
                 <li ><a  href="manager">Manager account</a></li>
                 <li ><a  href="manageritem">Manager Product</a></li>
                 <li ><a  href="FeedbackListServlet">Manager Feedback</a></li>
                     <%} else {%>
+                <li ><a  href="ListPostServlet">Post</a></li>
                 <li ><a  href="shop">Shop</a></li>
                 <li ><a  href="mycart" style="color:green;">Cart<span class="badge badge-danger">${cart_list.size()}</span></a></li>
                 <li ><a  href="myorder">My Order</a></li><%}%>

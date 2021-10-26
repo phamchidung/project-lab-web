@@ -39,7 +39,7 @@ public class userinfo extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet userinfo</title>");            
+            out.println("<title>Servlet userinfo</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet userinfo at " + request.getContextPath() + "</h1>");
@@ -60,15 +60,25 @@ public class userinfo extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String userSelected = request.getParameter("userSelected");
         DBContext db = new DBContext();
         DAO dao = new DAO(db);
-        HttpSession session = request.getSession();
-        String username = (String)session.getAttribute("username");
-        
-        Users user = dao.getAccountByUsername(username);
-        request.setAttribute("user_info", user);
-        
-        request.getRequestDispatcher("userinfo.jsp").forward(request, response);
+
+        // admin check info of user
+        if (userSelected != null) {
+            Users user = dao.getAccountByUsername(userSelected);
+            request.setAttribute("user_info", user);
+            request.setAttribute("notEdit", "1");
+            request.getRequestDispatcher("userinfo.jsp").forward(request, response);
+        } else {    // user check itself info
+            HttpSession session = request.getSession();
+            String username = (String) session.getAttribute("username");
+
+            Users user = dao.getAccountByUsername(username);
+            request.setAttribute("user_info", user);
+
+            request.getRequestDispatcher("userinfo.jsp").forward(request, response);
+        }
     }
 
     /**

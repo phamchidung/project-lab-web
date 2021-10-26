@@ -80,7 +80,7 @@
             #mainContainer {
                 width: 1200px;
                 height:100%;
-                margin: 40px auto;
+                margin: 60px auto;
                 padding: 20px 5px;
                 background: #f1f1f1;
                 boder:10px solid black;
@@ -139,12 +139,15 @@
                 <li ><a  href="userinfo" style="color:green;">Account</a></li>
 
                 <% if (admin != null) {%>
+                <li ><a  href="ListPostServlet">Manager Post</a></li>
+                <li ><a  href="OrderList">Manager Order</a></li>
                 <li ><a  href="manager">Manager account</a></li>
                 <li ><a  href="manageritem">Manager Product</a></li>
                 <li ><a  href="FeedbackListServlet">Manager Feedback</a></li>
                     <%} else {%>
-                <li ><a  href="shop">Shop</a></li>
+                <li ><a  href="ListPostServlet">Post</a></li>
                 <li ><a  href="mycart">Cart<span class="badge badge-danger">${cart_list.size()}</span></a></li>
+                <li ><a  href="shop">Shop</a></li>
                 <li ><a  href="myorder">My Order</a></li><%}%>
                 <li ><a  href="logout">Logout</a></li>
                     <%} else {%>
@@ -159,6 +162,33 @@
         <!-- END MENU -->
 
         <section id="mainContainer">
+            <div>
+                <%
+                    String status = (String) request.getAttribute("status");
+                    if (status != null) {
+                        if (status.equals("success")) {
+                %>
+                <div class="alert alert-success" role="alert">
+                    Đổi mật khẩu thành công
+                </div>
+                <%
+                } else if (status.equals("fail")) {
+                %>
+                <div class="alert alert-danger" role="alert">
+                    Mật khẩu không khớp, vui lòng thử lại
+                </div>
+                <%
+                        }
+                    }
+                %>
+
+                <script>
+            setTimeout(function () {
+                $(".alert").remove();
+            }, 3000);
+                </script>
+            </div>
+
             <div class="about" >
                 <h2 style="font-size:50px;font-family:Time New Roman">Thông tin tài khoản "${user_info.username}"</h2>
 
@@ -180,7 +210,6 @@
                         <div class="col-sm info">
                             ${user_info.password}
                         </div>
-
                     </div>
 
                     <div class="row">
@@ -190,7 +219,6 @@
                         <div class="col-sm info">
                             ${user_info.email}
                         </div>
-
                     </div>
 
                     <div class="row">
@@ -200,51 +228,71 @@
                         <div class="col-sm info">
                             ${user_info.phone}
                         </div>
-
                     </div>
 
+                    <div class="row">
+                        <div class="col-sm">
+                            <h3>Giới tính:</h3>
+                        </div>
+                        <div class="col-sm info">
+                            ${user_info.gender == 1 ? 'Nam':'Nữ'}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm">
+                            <h3>Địa chỉ:</h3>
+                        </div>
+                        <div class="col-sm info">
+                            ${user_info.address}
+                        </div>
+                    </div>
+
+                    <%
+                        String notEdit = (String) request.getAttribute("notEdit");
+                        if (notEdit == null) {
+                    %>
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editInfoModal">
-                        Sửa thông tin cá nhân
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editPasswordModal">
+                        Đổi mật khẩu
                     </button>
+                    <%
+                        }
+                    %>
 
                     <!-- Modal -->
-                    <div class="modal fade" id="editInfoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="editPasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Sửa thông tin</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Đổi mật khẩu</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
                                     <form id="editForm" action="editform" method="post">
+                                        <input type="hidden" value="${user_info.password}" name="password"/> <br>
+                                        <input type="hidden" value="${user_info.email}" name="email"/> <br>
+                                        <input type="hidden" value="${user_info.email}" name="email"/> <br>
+                                        <input type="hidden" value="${user_info.gender}" name="gender"/> <br>
+                                        <input type="hidden" value="${user_info.address}" name="address"/> <br>
                                         <div class="container">
                                             <div class="row mg-bot-20">
                                                 <div class="col-sm">
                                                     Mật khẩu
                                                 </div>
                                                 <div class="col-sm">
-                                                    <input type="text" required value="${user_info.password}" name="password"/> <br>
+                                                    <input type="password" required name="newPassword"/> <br>
                                                 </div>
                                             </div>
 
                                             <div class="row mg-bot-20">
                                                 <div class="col-sm">
-                                                    Email
+                                                    Nhập lại mật khẩu
                                                 </div>
                                                 <div class="col-sm">
-                                                    <input type="text" required value="${user_info.email}" name="email"/> <br>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mg-bot-20">
-                                                <div class="col-sm">
-                                                    SĐT
-                                                </div>
-                                                <div class="col-sm">
-                                                    <input type="text" required value="${user_info.phone}" name="phone"/> <br>
+                                                    <input type="password" required name="reNewPassword"/> <br>
                                                 </div>
                                             </div>
                                         </div>
@@ -252,7 +300,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                                    <button type="button" onclick="submitForm()" class="btn btn-primary">Lưu thay đổi</button>
+                                    <button type="button" onclick="submitForm()" class="btn btn-primary">Đổi mật khẩu</button>
 
                                     <script>
                                         function submitForm() {

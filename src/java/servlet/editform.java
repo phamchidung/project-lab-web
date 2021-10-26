@@ -39,7 +39,7 @@ public class editform extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet editform</title>");            
+            out.println("<title>Servlet editform</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet editform at " + request.getContextPath() + "</h1>");
@@ -76,19 +76,32 @@ public class editform extends HttpServlet {
             throws ServletException, IOException {
         DBContext db = new DBContext();
         DAO dao = new DAO(db);
-        
+
         HttpSession session = request.getSession();
         String userName = (String) session.getAttribute("username");
+
         String password = request.getParameter("password");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
-        
-        Users user = new Users(userName, password, email, phone);
-        
-        dao.updateInfoUser(user);
-        
-        request.setAttribute("user_info", user);
-        request.getRequestDispatcher("userinfo.jsp").forward(request, response);
+        int gender = Integer.parseInt(request.getParameter("gender"));
+        String address = request.getParameter("address");
+
+        Users user = new Users(userName, password, email, phone, gender, address);
+
+        String newPassword = request.getParameter("newPassword");
+        String reNewPassword = request.getParameter("reNewPassword");
+
+        if (!newPassword.equals(reNewPassword)) {
+            request.setAttribute("user_info", user);
+            request.setAttribute("status", "fail");
+            request.getRequestDispatcher("userinfo.jsp").forward(request, response);
+        } else {
+            dao.changePassword(userName, newPassword);
+            user.setPassword(newPassword);
+            request.setAttribute("user_info", user);
+            request.setAttribute("status", "success");
+            request.getRequestDispatcher("userinfo.jsp").forward(request, response);
+        }
     }
 
     /**

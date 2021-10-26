@@ -87,7 +87,7 @@
             #mainContainer {
                 width: 1200px;
                 height:100%;
-                margin: 40px auto;
+                margin: 60px auto;
                 padding: 20px 5px;
                 background: #FFFACD;
                 boder:10px solid black;
@@ -149,10 +149,13 @@
                 <li ><a  href="userinfo">Account</a></li>
 
                 <% if (admin != null) {%>
+                <li ><a  href="ListPostServlet">Manager Post</a></li>
+                <li ><a  href="OrderList">Manager Order</a></li>
                 <li ><a  href="manager" style="color:green;">Manager account</a></li>
                 <li ><a  href="manageritem">Manager Product</a></li>
                 <li ><a  href="FeedbackListServlet">Manager Feedback</a></li>
                     <%} else {%>
+                <li ><a  href="ListPostServlet">Post</a></li>
                 <li ><a  href="shop">Shop</a></li>
                 <li ><a  href="mycart">Cart<span class="badge badge-danger">${cart_list.size()}</span></a></li>
                 <li ><a  href="myorder">My Order</a></li><%}%>
@@ -178,7 +181,7 @@
 
                 <div class="search">
                     <form action="manager">
-                        <input class="user" required type="text" minlength="0" maxlength="10" placeholder="Người dùng..." value="${user_search}" name="user_search"/>
+                        <input class="user" type="text" maxlength="30" placeholder="Người dùng..." value="${user_search}" name="user_search"/>
                         <button type="submit" class="btnSubmit">Tìm kiếm</button>
                     </form>
                 </div>
@@ -187,9 +190,6 @@
                     <thead>
                         <tr>
                             <th scope="col">Username</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Phone</th>
-                            <th scope="col">Manager</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -197,10 +197,8 @@
 
                             <tr>
                                 <td>${x.username}</td>
-                                <td>${x.email}</td>
-                                <td>${x.phone}</td>
                                 <td><a href="manager?user=${x.username}">Delete</a></td>
-
+                                <td><a href="userinfo?userSelected=${x.username}">Detail</a></td>
                             </tr>
                         </c:forEach>
                     </tbody>
